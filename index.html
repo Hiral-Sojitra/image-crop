@@ -1,0 +1,79 @@
+<html>
+    <head>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script type="text/javascript" src="http://davidjbradshaw.com/imagemap-resizer/js/imageMapResizer.min.js"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-jcrop/0.9.15/css/jquery.Jcrop.css">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-jcrop/0.9.15/js/jquery.Jcrop.js"></script>
+        <!-- <link href="./resources/jquery.selectareas.css" media="screen" rel="stylesheet" type="text/css" /> -->
+		<script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+		<!-- <script src="./jquery.selectareas.js" type="text/javascript"></script> -->
+        <script src="jquery.selectareas.js"></script>
+
+    </head>
+    <body>
+        <script type="text/javascript">
+            function myFunction(e) {
+                var x = parseInt(e.clientX - $('#image1').offset().left);
+                var y = parseInt(e.clientY - $('#image1').offset().top);
+                var coor = "Coordinates: (" + x + "," + y + ")";
+                document.getElementById("output").innerHTML = coor;
+            }
+            function clearCoor() {
+                document.getElementById("output").innerHTML = "";
+            }
+             function displayAreas (areas) {
+				var text = "";
+				$.each(areas, function (id, area) {
+					text += areaToString(area);
+				});
+				output(text);
+			};
+            function output (text) {
+				$('#output').html(text);
+			}
+            function areaToString (area) {
+				return (typeof area.id === "undefined" ? "" : (area.id + ": ")) + area.x + ':' + area.y  + ' ' + area.width + 'x' + area.height + '<br />'
+			} 
+        </script>
+        <div>
+            <p>Click on the sun or on one of the planets to watch it closer:</p>
+            <img id="image1" onmousemove="myFunction(event)" onmouseout="clearCoor()" src="./image.jpg" alt="Planets" usemap="#planetmap">            
+            <input type="button" id="btnView" value="Display areas" class="actionOn" />
+            <map name="planetmap">
+                <area shape="rect" onmousemove="myFunction(event)" onmouseout="clearCoor()" coords="0,0,82,126" style="border:1px,solid,red" alt="Sun" href="sun.htm">
+                <area shape="circle" onmousemove="myFunction(event)" onmouseout="clearCoor()" coords="90,58,3" alt="Mercury" href="mercur.htm">
+                <area shape="circle" onmousemove="myFunction(event)" onmouseout="clearCoor()" coords="124,58,8" alt="Venus" href="venus.htm">
+            </map>
+            <span id="output"></span>
+            <span id="images"></span>
+        </div>
+        <script>
+            $(document).ready(function() {
+                $("#image1").on("click", function(event) {
+                    var x = event.pageX - this.offsetLeft;
+                    var y = event.pageY - this.offsetTop;
+                    alert("X Coordinate: " + x + " Y Coordinate: " + y);
+                }); 
+                /* $('#image1').Jcrop({
+                    onSelect: function(c){
+                        console.log(c);
+
+                        console.log(c.x);
+                        console.log(c.y);
+                        console.log(c.w);
+                        console.log(c.h);
+                    }
+                }) */
+					var areas = $('#image1').selectAreas('areas');
+					console.log("areas---",areas);
+                    $('#btnView').click(function () {
+					var areas = $('img#example').selectAreas('areas');
+					displayAreas(areas);
+				});
+                // var test = $('image1').imageMapResize();
+                // document.getElementById("images").innerHTML = test;
+                // alert(test)
+            });
+        </script>
+    </body>
+</html>
